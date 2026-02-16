@@ -11,7 +11,7 @@ time.sleep(2)
 cap.set(3,1280)
 cap.set(4,720)
 
-
+#from roboflow
 model=YOLO("Project/PokerHandDetector/playingCards.pt")
 
 classNames= [ '10C', '10D', '10H', '10S', 
@@ -27,31 +27,24 @@ classNames= [ '10C', '10D', '10H', '10S',
              'JC', 'JD', 'JH', 'JS', 
              'KC', 'KD', 'KH', 'KS', 
              'QC', 'QD', 'QH', 'QS' ]
-
 while True:
     success,img=cap.read()
     results=model(img)
     hand=[]
-
     for r in results:
         boxes=r.boxes
         for box in boxes:
             # OpenCV
-
             #bounding box
             x1,y1,x2,y2=box.xyxy[0]
             x1,y1,x2,y2=int(x1),int(y1),int(x2),int(y2)
-            #print(x1,y1,x2,y2)
             #cv2.rectangle(img,(x1,y1),(x2,y2),(255,0,255),3)
-
             # cvzone
             w,h=x2-x1,y2-y1
             cvzone.cornerRect(img,(x1,y1,w,h))
-
             #confidence
             conf=math.ceil((box.conf[0]*100))/100
             cvzone.putTextRect(img,f'{conf}',(max(0,x1),max(35,y1)))
-
             #class name
             cls=int(box.cls[0])
             cvzone.putTextRect(img,f'{classNames[cls]} {conf}',(max(0,x1),max(35,y1)),scale=3,thickness=1)
