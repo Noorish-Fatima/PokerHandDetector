@@ -1,4 +1,4 @@
-
+# poker hand rules - function
 
 def findPokerHand(hand):
     ranks=[]
